@@ -1,0 +1,94 @@
+<?php
+$nama_toko = "U & I Beauty";
+$slogan = "Temukan kecantikan alami dengan produk terbaik dari kami.";
+$tahun = date("Y");
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title><?= $nama_toko ?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+.hero {
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 1s ease-in-out;
+}
+
+.glass {
+    background: rgba(0,0,0,0.35); /* biar teks kebaca */
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg" style="background:#ffb6c1;">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-white"><?= $nama_toko ?></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="hero d-flex align-items-center justify-content-center text-center px-3">
+
+  <div class="glass p-5 rounded-4 text-white shadow" style="max-width:600px;">
+    <h1 class="fw-bold mb-3">Selamat Datang di <?= $nama_toko ?>!</h1>
+    <p class="fs-5 mb-4" id="sloganText"></p>
+    <a href="login.php"
+       class="btn btn-lg rounded-pill fw-bold px-4"
+       style="background:#e91e63;color:white;">
+        Jelajahi Sekarang
+    </a>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="text-center text-white py-3" style="background:#ffb6c1;">
+  &copy; <?= $tahun ?> <?= $nama_toko ?>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// BACKGROUND SLIDESHOW (2 detik)
+const images = [
+  "img/bg1.jpg",
+  "img/bg2.jpg",
+  "img/bg3.jpg"
+];
+
+let index = 0;
+const hero = document.getElementById("hero");
+
+function gantiBG() {
+    hero.style.backgroundImage = `url('${images[index]}')`;
+    index = (index + 1) % images.length;
+}
+
+gantiBG();
+setInterval(gantiBG, 2000);
+
+// TYPING EFFECT
+const text = "<?= $slogan ?>";
+let i = 0;
+const el = document.getElementById("sloganText");
+
+function type(){
+  if(i < text.length){
+    el.innerHTML += text.charAt(i++);
+    setTimeout(type, 50);
+  }
+}
+type();
+</script>
+
+</body>
+</html>
