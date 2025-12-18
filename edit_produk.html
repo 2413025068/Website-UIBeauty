@@ -1,0 +1,59 @@
+<?php
+session_start();
+include '../koneksi.php';
+
+if ($_SESSION['role'] != 'admin') {
+    header("Location: ../login.php");
+    exit;
+}
+
+$id = $_GET['id'];
+$p = mysqli_fetch_assoc(mysqli_query($conn,"SELECT * FROM produk WHERE id_produk='$id'"));
+
+if(isset($_POST['update'])){
+    $nama = $_POST['nama'];
+    $harga = $_POST['harga'];
+    $kategori = $_POST['kategori'];
+
+    if($_FILES['gambar']['name']!=""){
+        $gambar = $_FILES['gambar']['name'];
+        move_uploaded_file($_FILES['gambar']['tmp_name'], "../img/".$gambar);
+        mysqli_query($conn,"UPDATE produk SET gambar='$gambar' WHERE id_produk='$id'");
+    }
+
+    mysqli_query($conn,"UPDATE produk SET 
+        nama_produk='$nama',
+        harga='$harga',
+        kategori='$kategori'
+        WHERE id_produk='$id'
+    ");
+
+    header("Location: produk.php");
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Edit Produk</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+<h3 class="text-danger">Edit Produk</h3>
+
+<form method="POST" enctype="multipart/form-data">
+<input name="nama" value="<?= $p['nama_produk']; ?>" class="form-control mb-2">
+<input name="harga" value="<?= $p['harga']; ?>" class="form-control mb-2">
+<input name="kategori" value="<?= $p['kategori']; ?>" class="form-control mb-2">
+
+<img src="../img/<?= $p['gambar']; ?>" width="100" class="mb-2"><br>
+<input type="file" name="gambar" class="form-control mb-3">
+
+<button name="update" class="btn btn-warning">Update</button>
+<a href="produk.php" class="btn btn-secondary">Batal</a>
+</form>
+</div>
+
+</body>
+</html>
