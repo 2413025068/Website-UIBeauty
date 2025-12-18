@@ -1,0 +1,41 @@
+<?php
+session_start();
+include "koneksi.php";
+
+if (!isset($_SESSION['id_user'])) {
+    header("Location: login.php");
+    exit;
+}
+
+$cart  = json_decode($_POST['cart'], true);
+$total = $_POST['total'];
+
+$id_user = $_SESSION['id_user'];
+$tanggal = date('Y-m-d H:i:s');
+
+/* SIMPAN ORDER */
+mysqli_query($conn, "
+    INSERT INTO orders (id_user, tanggal_order, total)
+    VALUES ('$id_user', '$tanggal', '$total')
+");
+
+$id_order = mysqli_insert_id($conn);
+
+/* SIMPAN DETAIL */
+foreach ($cart as $item) {
+    $nama = $item['name'];
+    $qty  = $item['qty'];
+    $harga = $item['price'];
+    $sub = $qty * $harga;
+
+    mysqli_query($conn, "
+        INSERT INTO order_detail
+        (id_order, id_produk, nama_produk, jumlah, harga, subtotal)
+        VALUES
+        ('$id_order', 0, '$nama', '$qty', '$harga', '$sub')
+    ");
+}
+
+/* REDIRECT */
+header("Location: pesanan.php");
+exit;

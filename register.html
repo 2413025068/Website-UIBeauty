@@ -1,0 +1,104 @@
+<?php
+include "koneksi.php";
+
+if (isset($_POST['daftar'])) {
+    $username = $_POST['username'];
+    $email    = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    $query = "INSERT INTO user (username, email, password)
+              VALUES ('$username', '$email', '$password')";
+
+    if (mysqli_query($conn, $query)) {
+        echo "<script>alert('Pendaftaran berhasil! Silakan login.'); window.location='login.php';</script>";
+    } else {
+        echo "<script>alert('Gagal daftar!');</script>";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - U & I Beauty</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body
+class="min-vh-100 d-flex align-items-center justify-content-center"
+style="
+background:
+linear-gradient(rgba(255,182,193,0.8), rgba(255,192,203,0.9)),
+url('https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=1200&q=80')
+center/cover no-repeat;
+">
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+
+            <div class="card shadow-lg border-0 rounded-4 p-4">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold" style="color:#e91e63;">
+                        U & I Beauty
+                    </h3>
+                    <p class="text-muted mb-0">
+                        Buat akun baru untuk melanjutkan
+                    </p>
+                </div>
+
+                <form method="POST">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Email</label>
+                        <input type="email" name="email"
+                               class="form-control form-control-lg rounded-pill"
+                               placeholder="Masukkan email"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Username</label>
+                        <input type="text" name="username"
+                               class="form-control form-control-lg rounded-pill"
+                               placeholder="Masukkan username"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Kata Sandi</label>
+                        <input type="password" name="password"
+                               class="form-control form-control-lg rounded-pill"
+                               placeholder="Masukkan password"
+                               required>
+                    </div>
+
+                    <button type="submit" name="daftar"
+                            class="btn btn-lg w-100 rounded-pill fw-bold text-white"
+                            style="background-color:#e91e63;">
+                        Daftar
+                    </button>
+
+                </form>
+
+                <div class="text-center mt-3">
+                    <a href="login.php"
+                       class="text-decoration-none fw-medium"
+                       style="color:#e91e63;">
+                        Sudah punya akun? Login
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
