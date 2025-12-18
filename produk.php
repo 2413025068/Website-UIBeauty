@@ -1,0 +1,102 @@
+<?php
+session_start();
+if (!isset($_SESSION['id_user'])) {
+    header("Location: login.php");
+    exit;
+}
+
+include "koneksi.php";
+$nama_toko = "U & I Beauty";
+
+$makeup   = mysqli_query($conn, "SELECT * FROM produk WHERE kategori='Makeup'");
+$skincare = mysqli_query($conn, "SELECT * FROM produk WHERE kategori='Skincare'");
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Produk | <?= $nama_toko ?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+.card-produk img{
+    height: 160px;
+    object-fit: cover;
+}
+.card-produk{
+    border-radius: 16px;
+}
+</style>
+</head>
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<nav class="navbar bg-danger shadow-sm">
+  <div class="container">
+    <a class="navbar-brand text-white fw-bold"><?= $nama_toko ?></a>
+    <a href="keranjang.php" class="btn btn-light fw-semibold">🛒 Keranjang</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div class="bg-danger text-white text-center py-5 mb-4">
+    <h3 class="fw-bold mb-1">Produk Kami</h3>
+    <p class="mb-0">Produk kecantikan pilihan terbaik</p>
+</div>
+
+<div class="container pb-5">
+
+<!-- ================= MAKEUP ================= -->
+<h5 class="fw-bold text-danger mb-3">💄 Makeup</h5>
+<div class="row g-3 mb-5">
+<?php while($p = mysqli_fetch_assoc($makeup)): ?>
+<div class="col-lg-2 col-md-4 col-sm-6">
+  <div class="card card-produk h-100 shadow-sm">
+    <img src="img/<?= $p['gambar'] ?>" class="card-img-top">
+    <div class="card-body text-center p-2">
+      <h6 class="fw-semibold small mb-1"><?= $p['nama_produk'] ?></h6>
+      <p class="text-danger fw-bold small mb-2">
+        Rp <?= number_format($p['harga'],0,',','.') ?>
+      </p>
+
+      <form action="tambah_keranjang.php" method="post">
+        <input type="hidden" name="id_produk" value="<?= $p['id_produk'] ?>">
+        <input type="hidden" name="qty" value="1">
+        <button class="btn btn-danger btn-sm w-100">Beli</button>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endwhile; ?>
+</div>
+
+<!-- ================= SKINCARE ================= -->
+<h5 class="fw-bold text-danger mb-3">🧴 Skincare</h5>
+<div class="row g-3">
+<?php while($p = mysqli_fetch_assoc($skincare)): ?>
+<div class="col-lg-2 col-md-4 col-sm-6">
+  <div class="card card-produk h-100 shadow-sm">
+    <img src="img/<?= $p['gambar'] ?>" class="card-img-top">
+    <div class="card-body text-center p-2">
+      <h6 class="fw-semibold small mb-1"><?= $p['nama_produk'] ?></h6>
+      <p class="text-danger fw-bold small mb-2">
+        Rp <?= number_format($p['harga'],0,',','.') ?>
+      </p>
+
+      <form action="tambah_keranjang.php" method="post">
+        <input type="hidden" name="id_produk" value="<?= $p['id_produk'] ?>">
+        <input type="hidden" name="qty" value="1">
+        <button class="btn btn-danger btn-sm w-100">Beli</button>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endwhile; ?>
+</div>
+
+</div>
+</body>
+</html>

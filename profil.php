@@ -1,0 +1,88 @@
+<?php
+session_start();
+include 'koneksi.php';
+
+// Jika user belum login
+if (!isset($_SESSION['username'])) {
+    echo "<script>alert('Silakan login terlebih dahulu'); window.location='login.php';</script>";
+    exit;
+}
+
+$username = $_SESSION['username'];
+
+// Ambil data user
+$query = "SELECT * FROM user WHERE username = '$username'";
+$result = $conn->query($query);
+
+if ($result->num_rows > 0) {
+    $data = $result->fetch_assoc();
+} else {
+    echo "<script>alert('Data user tidak ditemukan');</script>";
+    exit;
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profil Pengguna</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .box {
+            width: 400px;
+            padding: 20px;
+            margin: auto;
+            border-radius: 10px;
+            background: #f8f8f8;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid #ddd;
+        }
+        p {
+            font-size: 18px;
+        }
+        a {
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .logout {
+            color: #d9534f;
+        }
+        .edit {
+            color: #0275d8;
+        }
+        .back {
+            color: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h2>Profil Pengguna</h2>
+
+        <!-- Foto Profil -->
+        <img src="uploads/<?= $data['photo'] ?: 'default.png'; ?>" alt="Foto Profil">
+
+        <p><b>Username:</b> <?= $data['username']; ?></p>
+        <p><b>Email:</b> <?= $data['email']; ?></p>
+
+        <br>
+        <a href="edit_profil.php" class="edit">Edit Profil</a>
+        <br><br>
+        <a href="produk.php" class="back">Kembali ke Produk</a>
+        <br><br>
+        <a href="logout.php" class="logout">Logout</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<?php
+session_start();
+$keranjang = $_SESSION['keranjang'] ?? [];
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Keranjang</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-4">
+<h3 class="mb-3">🛒 Keranjang Belanja</h3>
+
+<?php if(empty($keranjang)): ?>
+<p>Keranjang masih kosong</p>
+<?php else: ?>
+<table class="table align-middle">
+<thead>
+<tr>
+<th>Produk</th>
+<th>Harga</th>
+<th>Qty</th>
+<th>Subtotal</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody>
+
+<?php
+$total = 0;
+foreach($keranjang as $id => $item):
+$sub = $item['harga'] * $item['qty'];
+$total += $sub;
+?>
+<tr>
+<td><?= $item['nama'] ?></td>
+<td>Rp <?= number_format($item['harga'],0,',','.') ?></td>
+<td><?= $item['qty'] ?></td>
+<td>Rp <?= number_format($sub,0,',','.') ?></td>
+<td>
+<a href="hapus_keranjang.php?id=<?= $id ?>" class="btn btn-sm btn-danger">Hapus</a>
+</td>
+</tr>
+<?php endforeach; ?>
+
+</tbody>
+</table>
+
+<h5 class="text-end">Total: <b>Rp <?= number_format($total,0,',','.') ?></b></h5>
+<a href="checkout.php" class="btn btn-success w-100">Checkout</a>
+<?php endif; ?>
+
+<a href="produk.php" class="btn btn-secondary mt-3">← Kembali Belanja</a>
+</div>
+
+</body>
+</html>

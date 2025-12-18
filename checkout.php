@@ -1,0 +1,64 @@
+<?php
+session_start();
+if (!isset($_SESSION['id_user'])) {
+    header("Location: login.php");
+    exit;
+}
+
+include "koneksi.php";
+
+$keranjang = $_SESSION['keranjang'] ?? [];
+if (empty($keranjang)) {
+    header("Location: keranjang.php");
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Checkout</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-4">
+<h3 class="mb-3">🧾 Checkout</h3>
+
+<table class="table">
+<tr>
+<th>Produk</th>
+<th>Harga</th>
+<th>Qty</th>
+<th>Subtotal</th>
+</tr>
+
+<?php
+$total = 0;
+foreach ($keranjang as $item):
+$sub = $item['harga'] * $item['qty'];
+$total += $sub;
+?>
+<tr>
+<td><?= $item['nama'] ?></td>
+<td>Rp <?= number_format($item['harga'],0,',','.') ?></td>
+<td><?= $item['qty'] ?></td>
+<td>Rp <?= number_format($sub,0,',','.') ?></td>
+</tr>
+<?php endforeach; ?>
+</table>
+
+<h5 class="text-end">Total: <b>Rp <?= number_format($total,0,',','.') ?></b></h5>
+
+<form action="proses_checkout.php" method="post">
+    <button class="btn btn-success w-100 mt-3"
+            onclick="return confirm('Konfirmasi pesanan?')">
+        Konfirmasi Pesanan
+    </button>
+</form>
+
+<a href="keranjang.php" class="btn btn-secondary mt-3">← Kembali</a>
+</div>
+
+</body>
+</html>
